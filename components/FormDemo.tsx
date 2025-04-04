@@ -54,7 +54,7 @@ const FormDemo = () => {
         </div>
 
         <label
-          for="dropzone-file"
+          htmlFor="dropzone-file"
           className="flex items-center px-3 py-3 mx-auto mt-6 text-center bg-white border-2 border-dashed rounded-lg cursor-pointer dark:border-gray-600 dark:bg-gray-900"
         >
           <svg

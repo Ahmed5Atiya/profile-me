@@ -1,6 +1,5 @@
 import Footer from "@/components/Footer";
 import Form from "@/components/Form";
-import { FormDemo } from "@/components/FormDemo";
 import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
 import KindOfWord from "@/components/KindOfWord";
