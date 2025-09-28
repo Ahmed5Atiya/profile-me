@@ -1,6 +1,67 @@
-import React from "react";
+"use client";
+
+import React, { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
+import { FaWhatsapp } from "react-icons/fa";
+import { EMAILJS_CONFIG, WHATSAPP_CONFIG } from "@/lib/emailjs-config";
 
 const Form = () => {
+  const [formData, setFormData] = useState({
+    from_name: "",
+    from_email: "",
+    message: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      await emailjs.send(
+        EMAILJS_CONFIG.SERVICE_ID,
+        EMAILJS_CONFIG.TEMPLATE_ID,
+        {
+          from_name: formData.from_name,
+          from_email: formData.from_email,
+          message: formData.message,
+          to_email: EMAILJS_CONFIG.TO_EMAIL,
+        },
+        EMAILJS_CONFIG.PUBLIC_KEY
+      );
+
+      setIsSent(true);
+      setFormData({ from_name: "", from_email: "", message: "" });
+
+      // Reset success message after 3 seconds
+      setTimeout(() => setIsSent(false), 3000);
+    } catch (error) {
+      console.error("Error sending email:", error);
+      alert("Failed to send message. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleWhatsAppClick = () => {
+    const message = WHATSAPP_CONFIG.DEFAULT_MESSAGE;
+    const whatsappUrl = `https://wa.me/${
+      WHATSAPP_CONFIG.PHONE_NUMBER
+    }?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
+  };
   return (
     // <div className="container w-full flex items-center justify-center min-h-screen px-6 mx-auto">
     //   <form className="w-full ">
@@ -476,7 +537,7 @@ const Form = () => {
       </div>
 
       <div className="flex flex-col justify-center w-full p-8 pt-0 lg:w-1/2 lg:px-12 xl:px-24 ">
-        <form>
+        <form ref={formRef} onSubmit={handleSubmit}>
           <div className="-mx-2 md:items-center md:flex">
             <div className="flex-1 px-2">
               <label className="block mb-2 text-sm text-gray-600 dark:text-gray-200">
@@ -484,7 +545,11 @@ const Form = () => {
               </label>
               <input
                 type="text"
-                placeholder="Ahmed Khalid"
+                name="from_name"
+                value={formData.from_name}
+                onChange={handleChange}
+                placeholder="Your Name"
+                required
                 className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
               />
             </div>
@@ -495,7 +560,11 @@ const Form = () => {
               </label>
               <input
                 type="email"
-                placeholder="johndoe@example.com"
+                name="from_email"
+                value={formData.from_email}
+                onChange={handleChange}
+                placeholder="your@email.com"
+                required
                 className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
               />
             </div>
@@ -506,14 +575,39 @@ const Form = () => {
               Message
             </label>
             <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              placeholder="Your message here..."
+              required
               className="block w-full h-32 px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-md md:h-56 dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-              placeholder="Message"
             ></textarea>
           </div>
 
-          <button className="w-full px-6 py-3 mt-4 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
-            get in touch
-          </button>
+          {isSent && (
+            <div className="mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-md">
+              Message sent successfully! I'll get back to you soon.
+            </div>
+          )}
+
+          <div className="flex gap-4 mt-4">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="flex-1 px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? "Sending..." : "Send Message"}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleWhatsAppClick}
+              className="flex items-center justify-center px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-green-500 rounded-md hover:bg-green-400 focus:outline-none focus:ring focus:ring-green-300 focus:ring-opacity-50"
+            >
+              <FaWhatsapp className="w-5 h-5 mr-2" />
+              WhatsApp
+            </button>
+          </div>
         </form>
       </div>
     </section>

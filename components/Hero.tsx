@@ -1,8 +1,9 @@
 import { FaLocationArrow } from "react-icons/fa";
 import { BackgroundLines } from "./ui/background-lines";
 import MagicButton from "./ui/MagicButton";
+import { memo } from "react";
 
-const Hero = () => {
+const Hero = memo(() => {
   return (
     <BackgroundLines className="flex  items-center justify-center w-full flex-col  mt-28 pt-16 pb-7">
       <h2 className="uppercase max-w-80 text-center text-blue-100 tracking-widest">
@@ -26,6 +27,7 @@ const Hero = () => {
       </a>
     </BackgroundLines>
   );
-};
+});
 
+Hero.displayName = "Hero";
 export default Hero;

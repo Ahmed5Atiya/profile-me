@@ -1,18 +1,20 @@
-import React from "react";
+import React, { memo } from "react";
 import { BentoGrid, BentoGridItem } from "./ui/BentoGrid";
 
 import { gridItems } from "@/data";
-export const Skeleton = () => (
+
+export const Skeleton = memo(() => (
   <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
-);
-const Grid = () => {
+));
+
+const Grid = memo(() => {
   return (
     <section id="#about">
       <BentoGrid className="w-full py-20 z-50 ">
         {gridItems.map((item, i) => (
           <BentoGridItem
             id={item.id}
-            key={i}
+            key={item.id}
             title={item.title}
             description={item.description}
             className={item.className}
@@ -25,6 +27,7 @@ const Grid = () => {
       </BentoGrid>
     </section>
   );
-};
+});
 
+Grid.displayName = "Grid";
 export default Grid;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { FloatingDock } from "@/components/ui/floating-dock";
 import {
   IconBrandGithub,
@@ -8,7 +8,7 @@ import {
   IconTerminal2,
 } from "@tabler/icons-react";
 
-export function Navbar() {
+export const Navbar = memo(() => {
   const links = [
     {
       title: "Home",
@@ -57,4 +57,6 @@ export function Navbar() {
       />
     </div>
   );
-}
+});
+
+Navbar.displayName = 'Navbar';

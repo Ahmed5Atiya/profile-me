@@ -1,9 +1,10 @@
 import { projects } from "@/data";
-import React from "react";
+import React, { memo } from "react";
 import { PinContainer } from "./ui/3d-pin";
 import { FaLocationArrow } from "react-icons/fa";
+import Image from "next/image";
 
-const RecentProject = () => {
+const RecentProject = memo(() => {
   return (
     // <div className="py-20">
     //   <h1 className="heading ">
@@ -75,12 +76,21 @@ const RecentProject = () => {
                   className="relative w-full h-full overflow-hidden lg:rounded-3xl"
                   style={{ backgroundColor: "#13162D" }}
                 >
-                  <img src="/bg.png" alt="bgimg" />
+                  <Image 
+                    src="/bg.png" 
+                    alt="bgimg" 
+                    fill
+                    className="object-cover"
+                    priority={false}
+                  />
                 </div>
-                <img
+                <Image
                   src={item.img}
                   alt="cover"
+                  width={300}
+                  height={200}
                   className="z-10 absolute bottom-0"
+                  priority={false}
                 />
               </div>
 
@@ -108,7 +118,7 @@ const RecentProject = () => {
                         transform: `translateX(-${5 * index + 2}px)`,
                       }}
                     >
-                      <img src={icon} alt="icon5" className="p-2" />
+                      <Image src={icon} alt="icon" width={20} height={20} className="p-2" />
                     </div>
                   ))}
                 </div>
@@ -126,6 +136,7 @@ const RecentProject = () => {
       </div>
     </div>
   );
-};
+});
 
+RecentProject.displayName = 'RecentProject';
 export default RecentProject;
