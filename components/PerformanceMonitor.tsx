@@ -12,10 +12,12 @@ export const PerformanceMonitor = () => {
             console.log("LCP:", entry.startTime);
           }
           if (entry.entryType === "first-input") {
-            console.log("FID:", entry.processingStart - entry.startTime);
+            const firstInputEntry = entry as PerformanceEventTiming;
+            console.log("FID:", firstInputEntry.processingStart - firstInputEntry.startTime);
           }
           if (entry.entryType === "layout-shift") {
-            console.log("CLS:", entry.value);
+            const layoutShiftEntry = entry as PerformanceEntry & { value?: number };
+            console.log("CLS:", layoutShiftEntry.value);
           }
         }
       });
